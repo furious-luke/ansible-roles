@@ -1,0 +1,14 @@
+---
+
+- block:
+
+    - name: install PostgreSQL
+      homebrew: name=postgresql
+
+    - name: launch at startup
+      shell: ln -sfv /usr/local/opt/postgresql/*.plist ~/Library/LaunchAgents
+
+    - name: launch now
+      command: launchctl load ~/Library/LaunchAgents/homebrew.mxcl.postgresql.plist
+
+  when: ansible_distribution == "MacOSX"

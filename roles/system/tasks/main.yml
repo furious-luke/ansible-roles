@@ -1,0 +1,81 @@
+---
+
+- block:
+
+    - name: check for XCode (MacOSX)
+      stat: path=/usr/bin/gcc
+      register: xcode
+
+    - name: install XCode (MacOSX)
+      shell: xcode-select --install
+      when: xcode.stat.exists == False
+
+    - name: check for Homebrew (MacOSX)
+      stat: path=/usr/local/bin/brew
+      register: brew
+
+    - name: install Homebrew (MacOSX)
+      shell: ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+      when: brew.stat.exists == False
+
+    - name: install system Homebrew packages (MacOSX)
+      homebrew: name={{ item }}
+      with_items:
+        - wget
+        - python
+        - python3
+
+  when: ansible_distribution == "MacOSX"
+
+
+- block:
+
+  - name: update system (Arch)
+    pacman: update_cache=yes upgrade=full
+
+  - name: install virtualenv (Arch)
+    pacman: name=$item state=latest
+    with_items:
+      - python
+
+  when: ansible_distribution == "Arch"
+
+
+- block:
+
+  - name: install aptitude (Ubuntu)
+    become: yes
+    apt: name=aptitude state=latest
+
+  - name: update system (Ubuntu)
+    become: yes
+    apt: update_cache=yes upgrade=full
+    when: ansible_lsb.major_release|int <= 14
+
+  - name: install base packages (Ubuntu)
+    become: yes
+    apt: name={{ item }} state=latest
+    with_items:
+      - python3
+      - python3-pip
+      - git
+      - libffi-dev
+      - libssl-dev
+      - libxml2-dev
+      - libxslt1-dev
+
+  - name: install base packages (Ubuntu 14)
+    become: yes
+    apt: name={{ item }} state=latest
+    with_items:
+      - python-virtualenv
+    when: ansible_lsb.major_release|int <= 14
+
+  - name: install packages (Ubuntu 15+)
+    become: yes
+    apt: name={{ item }} state=latest
+    with_items:
+      - python3-venv
+    when: ansible_lsb.major_release|int >= 15
+
+  when: ansible_distribution == "Ubuntu"

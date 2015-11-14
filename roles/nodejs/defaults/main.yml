@@ -1,0 +1,5 @@
+---
+
+npm_base_requirements: "{{ site_root }}/requirements/npm.base"
+npm_requirements: "{{ site_root }}/requirements/npm.{{ deployment }}"
+node_modules_path: "{{ venv_dir }}"

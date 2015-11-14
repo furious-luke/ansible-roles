@@ -1,0 +1,5 @@
+---
+
+clone_repository: True
+repository_branch: master
+inst_name: "{{ project_name }}"

@@ -1,0 +1,17 @@
+---
+
+- name: determine Python site-packages path
+  shell: python -c 'import site; import sys; sys.stdout.write(site.getsitepackages()[0])'
+  register: site_packages
+
+- name: list patch files
+  shell: ls {{ python_patch_path }}/*.patch
+  register: patch_files
+
+- name: patch Python modules
+  patch:
+    basedir: "{{ site_packages.stdout }}"
+    remote_src: True
+    src: "{{ item }}"
+    strip: 1
+  with_items: "{{ patch_files.stdout_lines }}"

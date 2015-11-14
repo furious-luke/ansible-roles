@@ -1,0 +1,14 @@
+---
+
+- block:
+
+    - name: install Redis
+      homebrew: name=redis
+
+    - name: launch at startup
+      shell: ln -sfv /usr/local/opt/redis/*.plist ~/Library/LaunchAgents
+
+    - name: launch now
+      command: launchctl load ~/Library/LaunchAgents/homebrew.mxcl.redis.plist
+
+  when: ansible_distribution == "MacOSX"

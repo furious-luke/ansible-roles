@@ -1,0 +1,26 @@
+---
+
+- block:
+
+    - name: check if docker is installed (MacOSX)
+      stat: path=/usr/local/bin/docker
+      register: docker_bin
+
+  when: ansible_distribution == "MacOSX"
+
+
+- block:
+
+    - name: check for downloaded file (MacOSX)
+      stat: path=/tmp/DockerToolbox-1.9.0.pkg
+      register: docker_file
+
+    - name: download docker (MacOSX)
+      get_url: dest=/tmp url=https://github.com/docker/toolbox/releases/download/v1.9.0/DockerToolbox-1.9.0.pkg
+      when: docker_file.stat.exists == False
+
+    - name: install docker (MacOSX)
+      command: installer -pkg /tmp/DockerToolbox-1.9.0.pkg -tgt /
+      become: yes
+
+  when: ansible_distribution == "MacOSX" and docker_bin.stat.exists == False

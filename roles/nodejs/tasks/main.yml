@@ -1,0 +1,57 @@
+---
+
+- block:
+
+  - name: install nodejs (Ubuntu)
+    apt: name={{ item }} state=latest
+    with_items:
+      - nodejs
+      - npm
+
+  - name: softlink nodejs binary (Ubuntu)
+    file: src=/usr/bin/nodejs dest=/usr/bin/node owner=root group=root state=link
+
+  become: yes
+  when: ansible_distribution == "Ubuntu"
+
+- block:
+
+    - name: install nodejs (MacOSX)
+      homebrew: name=node
+
+  when: ansible_distribution == "MacOSX"
+
+- block:
+
+    - name: determine nodejs base packages
+      shell: cat {{ npm_base_requirements }}
+      register: npm_base_pkgs
+
+    - name: install base nodejs dependencies
+      npm: name={{ item }} path={{ node_modules_path }}
+      with_items: "{{ npm_base_pkgs.stdout_lines }}"
+
+  when: npm_base_requirements is defined
+
+- block:
+
+    - name: determine nodejs packages
+      shell: cat {{ npm_requirements }}
+      register: npm_pkgs
+
+    - name: install nodejs dependencies
+      npm: name={{ item }} path={{ node_modules_path }}
+      with_items: "{{ npm_pkgs.stdout_lines }}"
+
+  when: npm_requirements is defined
+
+- name: update virtual environment activation script
+  lineinfile:
+    state: present
+    dest: "{{ venv_dir }}/bin/activate"
+    line: "{{ item  }}"
+    insertafter: EOF
+  with_items:
+    - export PATH={{ node_modules_path }}/node_modules/.bin:$PATH
+    - export NODE_PATH={{ node_modules_path }}/node_modules:$NODE_PATH
+  when: venv_dir is defined and node_modules_path is defined

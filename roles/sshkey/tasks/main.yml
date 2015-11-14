@@ -1,0 +1,9 @@
+---
+
+- name: check for SSH key
+  stat: path=~/.ssh/id_rsa.pub
+  register: ssh_key
+
+- name: create SSH key
+  command: ssh-keygen -t rsa -C {{ user_email }} -N "" -f ~/.ssh/id_rsa
+  when: ssh_key.stat.exists == False
