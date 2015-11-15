@@ -38,3 +38,5 @@
       when: ansible_distribution == "Ubuntu" and ansible_lsb.major_release|int <= 14
 
   when: venv_dir is defined
+
+- include: patch.yml

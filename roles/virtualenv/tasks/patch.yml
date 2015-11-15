@@ -1,7 +1,7 @@
 ---
 
 - name: determine Python site-packages path
-  shell: python -c 'import site; import sys; sys.stdout.write(site.getsitepackages()[0])'
+  shell: "{{ venv_dir }}/bin/python -c 'from distutils.sysconfig import get_python_lib; print(get_python_lib())'"
   register: site_packages
 
 - name: list patch files

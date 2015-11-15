@@ -1,0 +1,11 @@
+---
+
+- name: update virtual environment activation script
+  lineinfile:
+    state: present
+    dest: "{{ venv_dir }}/bin/activate"
+    line: "{{ item  }}"
+    insertafter: EOF
+  with_items:
+    - export DJANGO_SETTINGS_MODULE={{ site_name }}.settings.{{ deployment }}
+    - export PYTHONPATH={{ site_root }}/{{ site_name }}:$PYTHONPATH
