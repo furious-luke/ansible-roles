@@ -1,0 +1,14 @@
+---
+
+- block:
+
+    - name: install Rabbitmq
+      homebrew: name=rabbitmq
+
+    - name: launch at startup
+      shell: ln -sfv /usr/local/opt/rabbitmq/*.plist ~/Library/LaunchAgents
+
+    - name: launch now
+      command: launchctl load ~/Library/LaunchAgents/homebrew.mxcl.rabbitmq.plist
+
+  when: ansible_distribution == "MacOSX"

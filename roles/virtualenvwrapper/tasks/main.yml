@@ -2,7 +2,7 @@
 
 - name: install virtualenvwrapper
   pip:
-    executable: "{{ pip_exe }}"
+    executable: pip3
     name: virtualenvwrapper
 
 - name: update shell startup
@@ -13,19 +13,18 @@
     insertafter: EOF
   with_items:
     - export WORKON_HOME=$HOME/.virtualenvs
-    - export PROJECT_HOME={{ project_dir }}
+    - export PROJECT_HOME={{ site_root }}
     - source /usr/local/bin/virtualenvwrapper.sh
 
 - name: get virtualenv path
   shell: . {{ shellrc.stdout }} >& /dev/null && echo $WORKON_HOME
-  register: venv_dir
-  when: venv_dir is undefined
+  register: virtualenvs_dir
+
+- name: compose venv_dir
+  set_fact:
+    venv_dir: "{{ virtualenvs_dir.stdout }}/{{ inst_name }}"
 
 - name: create virtualenv
   shell: . {{ shellrc.stdout }} && mkvirtualenv -p {{ python_exe }} {{ inst_name }}
   args:
-    creates: "{{ venv_dir.stdout }}/{{ inst_name }}"
-
-# - name: get pip executable
-#   shell: . {{ shellrc.stdout }} >& /dev/null && workon {{ inst_name }} && which pip
-#   register: pip_exe
+    creates: "{{ venv_dir }}"

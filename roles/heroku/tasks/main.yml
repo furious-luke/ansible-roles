@@ -1,3 +1,5 @@
+---
+
 - name: check for Heroku
   shell: which heroku
   register: which_heroku
@@ -13,7 +15,6 @@
     line: export PATH=/usr/local/heroku/bin:$PATH
     insertafter: EOF
 
-
 - block:
 
     - name: generate Heroku input
@@ -26,4 +27,4 @@
       - name: add Heroku keys
         shell: /usr/local/heroku/bin/heroku keys:add <<Y\n
 
-  when: heroku_email and heroku_password
+  when: heroku_email is defined and heroku_password is defined

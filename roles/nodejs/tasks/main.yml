@@ -23,25 +23,39 @@
 
 - block:
 
-    - name: determine nodejs base packages
-      shell: cat {{ npm_base_requirements }}
-      register: npm_base_pkgs
+    - name: determine if nodejs base packages file exists
+      stat: path={{ npm_base_requirements }}
+      register: npm_base_pkgs_file
 
-    - name: install base nodejs dependencies
-      npm: name={{ item }} path={{ node_modules_path }}
-      with_items: "{{ npm_base_pkgs.stdout_lines }}"
+    - block:
+
+        - name: determine nodejs base packages
+          shell: cat {{ npm_base_requirements }}
+          register: npm_base_pkgs
+
+        - name: install base nodejs dependencies
+          npm: name={{ item }} path={{ node_modules_path }}
+          with_items: "{{ npm_base_pkgs.stdout_lines }}"
+
+      when: npm_base_pkgs_file.stat.exists
 
   when: npm_base_requirements is defined
 
 - block:
 
+    - name: determine if nodejs packages file exists
+      stat: path={{ npm_requirements }}
+      register: npm_pkgs_file
+
     - name: determine nodejs packages
       shell: cat {{ npm_requirements }}
       register: npm_pkgs
+      when: npm_pkgs_file.stat.exists
 
     - name: install nodejs dependencies
       npm: name={{ item }} path={{ node_modules_path }}
       with_items: "{{ npm_pkgs.stdout_lines }}"
+      when: npm_pkgs_file.stat.exists
 
   when: npm_requirements is defined
 
