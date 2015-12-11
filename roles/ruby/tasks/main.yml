@@ -1,0 +1,6 @@
+- name: install Ruby
+  become: yes
+  apt: name={{ item }} state=latest
+  with_items:
+    - ruby
+  when: ansible_distribution == "Ubuntu"

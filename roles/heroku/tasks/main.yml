@@ -1,11 +1,12 @@
 ---
 
 - name: check for Heroku
-  shell: which heroku
+  stat: path=/usr/local/heroku/bin/heroku
   register: which_heroku
 
 - name: install Heroku
   shell: wget -O- https://toolbelt.heroku.com/install.sh | sh
+  become: yes
   when: which_heroku.stat.exists == False
 
 - name: update shell script
@@ -15,16 +16,16 @@
     line: export PATH=/usr/local/heroku/bin:$PATH
     insertafter: EOF
 
-- block:
+# - block:
 
-    - name: generate Heroku input
-      shell: echo "EOF\n{{ heroku_email }}\n{{ heroku_password }}\nEOF"
-      register: heroku_input
+#     - name: generate Heroku input
+#       shell: echo "EOF\n{{ heroku_email }}\n{{ heroku_password }}\nEOF"
+#       register: heroku_input
 
-      - name: login to Heroku
-        shell: /usr/local/heroku/bin/heroku <<{{ heroku_input.stdout }}
+#       - name: login to Heroku
+#         shell: /usr/local/heroku/bin/heroku <<{{ heroku_input.stdout }}
 
-      - name: add Heroku keys
-        shell: /usr/local/heroku/bin/heroku keys:add <<Y\n
+#       - name: add Heroku keys
+#         shell: /usr/local/heroku/bin/heroku keys:add <<Y\n
 
-  when: heroku_email is defined and heroku_password is defined
+#   when: heroku_email is defined and heroku_password is defined

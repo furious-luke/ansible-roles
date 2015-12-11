@@ -3,7 +3,19 @@
 - name: install virtualenvwrapper
   pip:
     executable: pip3
+    extra_args: --system
     name: virtualenvwrapper
+  become: yes
+
+- name: select virtualenvwrapper Python version
+  lineinfile:
+    state: present
+    dest: "{{ shellrc.stdout }}"
+    line: "{{ item }}"
+    insertafter: EOF
+  with_items:
+    - export VIRTUALENVWRAPPER_PYTHON={{ python_exe }}
+  when: ansible_distribution == "Ubuntu"
 
 - name: update shell startup
   lineinfile:
@@ -13,11 +25,10 @@
     insertafter: EOF
   with_items:
     - export WORKON_HOME=$HOME/.virtualenvs
-    - export PROJECT_HOME={{ site_root }}
     - source /usr/local/bin/virtualenvwrapper.sh
 
 - name: get virtualenv path
-  shell: . {{ shellrc.stdout }} >& /dev/null && echo $WORKON_HOME
+  shell: . {{ shellrc.stdout }} && echo $WORKON_HOME
   register: virtualenvs_dir
 
 - name: compose venv_dir

@@ -12,3 +12,22 @@
       command: launchctl load ~/Library/LaunchAgents/homebrew.mxcl.postgresql.plist
 
   when: ansible_distribution == "MacOSX"
+
+
+- block:
+
+    - name: install PostgreSQL
+      become: yes
+      apt: name={{ item }} state=latest
+      with_items:
+        - postgresql
+        - postgresql-contrib
+        - libpq-dev
+
+  when: ansible_distribution == "Ubuntu"
+
+
+- name: install hstore
+  shell: psql template1 -c 'create extension hstore'
+  become: yes
+  become_user: postgres
