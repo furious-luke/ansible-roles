@@ -1,3 +1,4 @@
 ---
 
 site_name: "{{ project_name }}"
+media_file: "{{ site_root }}/{{ site_name }}/main/fixtures/media.tgz"

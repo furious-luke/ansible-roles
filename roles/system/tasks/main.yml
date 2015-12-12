@@ -65,6 +65,7 @@
       - libssl-dev
       - libxml2-dev
       - libxslt1-dev
+      - libjpeg-dev
 
   - name: install base packages (Ubuntu 14)
     become: yes
@@ -88,5 +89,6 @@
       insertafter: EOF
     with_items:
       - export PYTHONPATH=/usr/local/lib/python3.5/dist-packages:$PYTHONPATH
+    when: shellrc is defined
 
   when: ansible_distribution == "Ubuntu"

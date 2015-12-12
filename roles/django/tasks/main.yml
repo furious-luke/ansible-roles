@@ -9,3 +9,18 @@
   with_items:
     - export DJANGO_SETTINGS_MODULE={{ site_name }}.settings.{{ deployment }}
     - export PYTHONPATH={{ site_root }}/{{ site_name }}:$PYTHONPATH
+
+- block:
+
+    - name: check for existence of media file
+      stat: path={{ media_file }}
+      register: media
+
+    - name: install test media
+      unarchive:
+        src: "{{ media.stat.path }}"
+        dest: "{{ site_root }}/{{ project_name }}"
+        creates: "{{ site_root }}/{{ project_name }}/media"
+      when: media.stat.exists
+  
+  when: deployment == "development"
