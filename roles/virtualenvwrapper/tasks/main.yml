@@ -36,6 +36,7 @@
     venv_dir: "{{ virtualenvs_dir.stdout }}/{{ inst_name }}"
 
 - name: create virtualenv
-  shell: . {{ shellrc.stdout }} && mkvirtualenv -p {{ python_exe }} {{ inst_name }}
+  shell: . {{ shellrc.stdout }} && . /usr/local/bin/virtualenvwrapper.sh && mkvirtualenv -p {{ python_exe }} {{ inst_name }}
   args:
     creates: "{{ venv_dir }}"
+    executable: /bin/bash
