@@ -66,6 +66,7 @@
       - libxml2-dev
       - libxslt1-dev
       - libjpeg-dev
+      - xvfb
 
   - name: install base packages (Ubuntu 14)
     become: yes
