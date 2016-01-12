@@ -31,14 +31,19 @@
 - block:
 
   - name: update system (Arch)
-    pacman: update_cache=yes upgrade=full
+    become: yes
+    pacman: update_cache=yes upgrade=no
 
-  - name: install virtualenv (Arch)
-    pacman: name=$item state=latest
+  - name: install base packages (Arch)
+    become: yes
+    pacman: name={{ item }} state=latest
     with_items:
       - python
+      - python2-psycopg2
+      - libxml2
+      - libxslt
 
-  when: ansible_distribution == "Arch"
+  when: ansible_distribution == "Archlinux"
 
 
 - block:

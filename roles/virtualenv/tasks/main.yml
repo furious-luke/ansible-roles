@@ -28,6 +28,8 @@
         virtualenv: "{{ venv_dir }}"
         requirements: "{{ pip_requirements_file }}"
       when: ansible_distribution != "Ubuntu" or ansible_lsb.major_release|int >= 15
+      environment:
+        CPATH: /usr/include/libxml2
 
     - name: install Python requirements (Ubuntu 14)
       pip:

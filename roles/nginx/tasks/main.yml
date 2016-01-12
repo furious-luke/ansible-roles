@@ -1,0 +1,13 @@
+- block:
+
+    - name: install Nginx (Arch)
+      pacman: name={{ item }} state=latest
+      with_items:
+        - nginx
+      become: yes
+
+    - name: enable Nginx (Arch)
+      service: name=nginx enabled=yes state=started
+      become: yes
+
+  when: ansible_distribution == "Archlinux"
