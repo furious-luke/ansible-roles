@@ -20,7 +20,7 @@
       unarchive:
         src: "{{ media.stat.path }}"
         dest: "{{ site_root }}/{{ project_name }}"
-        creates: "{{ site_root }}/{{ project_name }}/media"
+        creates: "{{ media_root }}"
       when: media.stat.exists
   
   when: deployment == "development"
