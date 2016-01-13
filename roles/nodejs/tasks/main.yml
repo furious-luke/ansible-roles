@@ -19,6 +19,19 @@
   become: yes
   when: ansible_distribution == "Ubuntu"
 
+
+- block:
+
+  - name: install nodejs (Arch)
+    pacman: name={{ item }} state=latest
+    with_items:
+      - nodejs
+      - npm
+    become: yes
+
+  when: ansible_distribution == "Archlinux"
+
+
 - block:
 
     - name: install nodejs (MacOSX)

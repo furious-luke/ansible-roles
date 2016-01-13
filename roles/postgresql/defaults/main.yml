@@ -1,0 +1,3 @@
+db_name: "{{ project_name }}"
+db_username: "{{ project_name }}"
+db_password: NULL

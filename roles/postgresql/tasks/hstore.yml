@@ -1,0 +1,5 @@
+- name: install hstore
+  shell: psql template1 -c 'create extension hstore'
+  become: yes
+  become_user: postgres
+  ignore_errors: yes

@@ -1,8 +1,13 @@
 ---
 
+# - name: install psycopg2 on host
+#   local_action: pip name=psycopg2
+#   become: yes
+
+
 - block:
 
-    - name: install PostgreSQL
+    - name: install PostgreSQL (Mac OSX)
       homebrew: name=postgresql
 
     - name: launch at startup
@@ -16,19 +21,42 @@
 
 - block:
 
-    - name: install PostgreSQL
-      become: yes
+    - name: install PostgreSQL (Ubuntu)
       apt: name={{ item }} state=latest
       with_items:
         - postgresql
         - postgresql-contrib
         - libpq-dev
+      become: yes
 
   when: ansible_distribution == "Ubuntu"
 
 
-- name: install hstore
-  shell: psql template1 -c 'create extension hstore'
-  become: yes
-  become_user: postgres
-  ignore_errors: yes
+- block:
+
+    - name: install PostgreSQL (Arch)
+      pacman: name={{ item }} state=latest
+      with_items:
+        - postgresql
+      become: yes
+
+    - name: initialize database cluster
+      command: initdb --locale en_US.UTF-8 -E UTF8 -D '/var/lib/postgres/data'
+      args:
+        creates: /var/lib/postgres/data/postgresql.conf
+      become: yes
+      become_user: postgres
+
+    - name: enable PostgreSQL
+      service: name=postgresql enabled=yes state=started
+      become: yes
+
+    - name: add PostgreSQL user 
+      postgresql_user: name={{ db_username }} password={{ db_password }} role_attr_flags=CREATEDB
+      become: yes
+      become_user: postgres
+
+    - name: create database
+      postgresql_db: name={{ db_name }} owner={{ db_username }} encoding='UTF-8'
+
+  when: ansible_distribution == "Archlinux"
