@@ -1,0 +1,19 @@
+- name: install ufw (Arch)
+  pacman: name=ufw state=latest
+  become: yes
+  when: ansible_distribution == "Archlinux"
+
+- name: allow SSH
+  ufw: rule=allow name=SSH
+
+- name: deny incoming
+  ufw: state=enabled direction=incoming policy=deny
+
+- name: allow web
+  ufw: rule=allow name="WWW Full"
+
+- name: rate limit SSH
+  ufw: rule=limit port=ssh proto=tcp
+
+- name: create the web user
+  user: name={{ web_user }} createhome=no
