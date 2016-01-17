@@ -1,0 +1,14 @@
+- block:
+
+    - name: install uwsgi (Arch)
+      pacman: name={{ item }} state=latest
+      with_items:
+        - uwsgi
+        - uwsgi-plugin-python
+      become: yes
+
+    - name: enable uwsgi (Arch)
+      service: name=uwsgi@{{ project_name }}.socket enabled=yes state=started
+      become: yes
+
+  when: ansible_distribution == "Archlinux"
