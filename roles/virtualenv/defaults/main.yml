@@ -3,3 +3,4 @@
 venv_dir: "{{ site_root }}/environ"
 pip_requirements_file: "{{ site_root }}/requirements/pip.{{ deployment }}"
 python_patch_path: "{{ site_root }}/patches/python"
+web_user: "{{ project_name }}"

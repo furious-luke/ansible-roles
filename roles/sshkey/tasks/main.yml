@@ -7,3 +7,9 @@
 - name: create SSH key
   command: ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa
   when: ssh_key.stat.exists == False
+
+- name: add to authorized keys
+  authorized_key: user=root key="{{ item }}"
+  with_fileglob:
+    - ../public_keys/*
+  when: deployment == "production"

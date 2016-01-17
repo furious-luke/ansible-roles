@@ -38,10 +38,12 @@
     become: yes
     pacman: name={{ item }} state=latest
     with_items:
+      - base-devel
       - python
       - python2-psycopg2
       - libxml2
       - libxslt
+      - libjpeg-turbo
 
   when: ansible_distribution == "Archlinux"
 

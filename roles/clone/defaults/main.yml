@@ -3,3 +3,5 @@
 clone_repository: True
 repository_branch: master
 inst_name: "{{ project_name }}"
+web_user: "{{ project_name }}"
+web_group: http

@@ -1,11 +1,16 @@
 ---
 
+- name: install git (Arch)
+  pacman: name=git state=latest
+  become: yes
+  when: ansible_distribution == "Archlinux"
+
 - name: clone repository
   git:
-   recursive: yes
-   repo: "{{ repository_url }}"
-   dest: "{{ site_root }}"
-   update: no
-   accept_hostkey: yes
-   version: "{{ repository_branch }}"
+    recursive: yes
+    repo: "{{ repository_url }}"
+    dest: "{{ site_root }}"
+    update: no
+    accept_hostkey: yes
+    version: "{{ repository_branch }}"
   when: clone_repository
