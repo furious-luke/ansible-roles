@@ -6,6 +6,22 @@
         - nginx
       become: yes
 
+    - name: install nginx template
+      template:
+        src: nginx.conf
+        dest: /etc/nginx/nginx.conf
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: install uwsgi_params
+      template:
+        src: uwsgi_params
+        dest: "{{ site_root }}/uwsgi_params"
+        owner: "{{ web_user }}"
+        group: "{{ web_group }}"
+        mode: 0644
+
     - name: enable Nginx (Arch)
       service: name=nginx enabled=yes state=started
       become: yes

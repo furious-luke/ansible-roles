@@ -7,6 +7,14 @@
         - uwsgi-plugin-python
       become: yes
 
+    - name: install uwsgi template
+      template:
+        src: uwsgi.ini
+        dest: /etc/uwsgi/{{ project_name }}.ini
+        owner: "{{ web_user }}"
+        group: "{{ web_group }}"
+        mode: 0644
+
     - name: enable uwsgi (Arch)
       service: name=uwsgi@{{ project_name }}.socket enabled=yes state=started
       become: yes
