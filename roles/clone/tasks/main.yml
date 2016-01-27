@@ -10,7 +10,7 @@
     recursive: yes
     repo: "{{ repository_url }}"
     dest: "{{ site_root }}"
-    update: no
+    update: yes
     accept_hostkey: yes
     version: "{{ repository_branch }}"
   when: clone_repository
