@@ -16,7 +16,7 @@
         mode: 0644
 
     - name: enable uwsgi (Arch)
-      service: name=uwsgi@{{ project_name }}.socket enabled=yes state=started
+      service: name=uwsgi@{{ project_name }}.service enabled=yes state=started
       become: yes
 
   when: ansible_distribution == "Archlinux"
