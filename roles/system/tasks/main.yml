@@ -32,7 +32,7 @@
 
   - name: update system (Arch)
     become: yes
-    pacman: update_cache=yes upgrade=no
+    pacman: update_cache=yes upgrade=yes
 
   - name: install base packages (Arch)
     become: yes
