@@ -1,0 +1,23 @@
+---
+
+- block:
+
+  - name: create crash mailer unit
+    template:
+      src: crash-mail@.service
+      dest: /etc/systemd/system/crash-mail@.service
+      owner: root
+      group: root
+      mode: 0644
+    become: yes
+
+  - name: create crash mailer
+    template:
+      src: crash-mail.sh
+      dest: /bin/crash-mail.sh
+      owner: root
+      group: root
+      mode: "u=rwx,g=rx,o=rx"
+    become: yes
+
+  when: ansible_distribution == "Archlinux"

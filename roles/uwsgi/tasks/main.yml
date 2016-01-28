@@ -15,8 +15,22 @@
         group: "{{ web_group }}"
         mode: 0644
 
+    - name: auto-restart on crash
+      lineinfile:
+        state: present
+        dest: /usr/lib/systemd/system/uwsgi@.service
+        line: Restart=always
+        insertafter: \[Service\]
+
+    - name: email on crash
+      lineinfile:
+        state: present
+        dest: /usr/lib/systemd/system/uwsgi@.service
+        line: OnFailure=crash-mail@%n.service
+        insertafter: \[Unit\]
+
     - name: enable uwsgi (Arch)
-      service: name=uwsgi@{{ project_name }}.service enabled=yes state=started
+      service: name=uwsgi@{{ project_name }}.service enabled=yes state=reloaded
       become: yes
 
   when: ansible_distribution == "Archlinux"

@@ -40,6 +40,20 @@
         - postgresql
       become: yes
 
+    - name: auto-restart on crash
+      lineinfile:
+        state: present
+        dest: /usr/lib/systemd/system/postgresql.service
+        line: Restart=always
+        insertafter: \[Service\]
+
+    - name: email on crash
+      lineinfile:
+        state: present
+        dest: /usr/lib/systemd/system/postgresql.service
+        line: OnFailure=crash-mail@%n.service
+        insertafter: \[Unit\]
+
     - name: initialize database cluster
       command: initdb --locale en_US.UTF-8 -E UTF8 -D '/var/lib/postgres/data'
       args:
@@ -48,7 +62,7 @@
       become_user: postgres
 
     - name: enable PostgreSQL
-      service: name=postgresql enabled=yes state=started
+      service: name=postgresql enabled=yes state=reloaded
       become: yes
 
     - name: add PostgreSQL user 
