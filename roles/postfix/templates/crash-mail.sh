@@ -1,5 +1,5 @@
 #!/bin/bash
-MAILTO="{{ admin_email }}"
+MAILTO={{ admin_email }}
 MAILFROM="crash-mailer"
 UNIT=$1
 
@@ -10,17 +10,11 @@ done
 
 UNITSTATUS=$(systemctl status $UNIT)
 
-sendmail $MAILTO <<EOF
-EOF
-From:$MAILFROM
-To:$MAILTO
-Subject:Status mail for unit: $UNIT
-
+mail -v -s "Crash mail for unit: $UNIT" $MAILTO <<EOF
 Status report for unit: $UNIT
 $EXTRA
 
 $UNITSTATUS
 EOF
 
-echo -e "Status mail sent to: $MAILTO for unit: $UNIT"
-EOF
+echo -e "Crash mail sent to: $MAILTO for unit: $UNIT"

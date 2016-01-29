@@ -1,0 +1,31 @@
+---
+
+- block:
+
+    - name: install postfix
+      pacman: name={{ item }} state=latest
+      with_items:
+        - postfix
+      become: yes
+
+    - name: configure postfix for null client
+      lineinfile:
+        state: present
+        dest: /etc/postfix/main.cf
+        line: "{{ item }}"
+        insertafter: EOF
+      with_items:
+        - myhostname = {{ domain_name }}
+        - myorigin = {{ domain_name }}
+        - inet_interfaces = loopback-only
+        - mydestination =
+
+    - name: enable postfix
+      service: name=postfix enabled=yes state=reloaded
+      become: yes
+
+    - name: setup outgoing crash mailer
+      include: crash-mail.yml
+      when: deployment == "production"
+
+  when: ansible_distribution == "Archlinux"

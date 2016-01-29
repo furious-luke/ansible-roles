@@ -1,0 +1,7 @@
+[Unit]
+Description=Crash Mailer Service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/bin/crash-mail.sh %I "Hostname: %H" "Machine ID: %m" "Boot ID: %b"
