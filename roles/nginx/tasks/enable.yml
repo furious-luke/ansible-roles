@@ -1,0 +1,7 @@
+- block:
+
+    - name: enable Nginx (Arch)
+      service: name=nginx enabled=yes state=reloaded
+      become: yes
+
+  when: ansible_distribution == "Archlinux"

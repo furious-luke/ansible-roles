@@ -28,8 +28,4 @@
         line: OnFailure=crash-mail@%n.service
         insertafter: \[Unit\]
 
-    - name: enable Nginx (Arch)
-      service: name=nginx enabled=yes state=reloaded
-      become: yes
-
   when: ansible_distribution == "Archlinux"
