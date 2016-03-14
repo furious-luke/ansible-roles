@@ -45,13 +45,13 @@
 - name: install nodejs dependencies
   npm: path={{ site_root }}
 
-- name: update virtual environment activation script
-  lineinfile:
-    state: present
-    dest: "{{ venv_dir }}/bin/activate"
-    line: "{{ item  }}"
-    insertafter: EOF
-  with_items:
-    - export PATH={{ node_modules_path }}/node_modules/.bin:$PATH
-    - export NODE_PATH={{ node_modules_path }}/node_modules:$NODE_PATH
-  when: venv_dir is defined and node_modules_path is defined
+# - name: update virtual environment activation script
+#   lineinfile:
+#     state: present
+#     dest: "{{ venv_dir }}/bin/activate"
+#     line: "{{ item  }}"
+#     insertafter: EOF
+#   with_items:
+#     - export PATH={{ node_modules_path }}/node_modules/.bin:$PATH
+#     - export NODE_PATH={{ node_modules_path }}/node_modules:$NODE_PATH
+#   when: venv_dir is defined and node_modules_path is defined
